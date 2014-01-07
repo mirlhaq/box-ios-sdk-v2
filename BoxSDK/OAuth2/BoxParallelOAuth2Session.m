@@ -50,11 +50,20 @@
             [self.expiredOAuth2Tokens addObject:expiredAccessToken];
         }
         
+        // Dermtap: our Box Auth flow is different, the server is the one that refreshes the token not BoxSDK.
+        if (!self.clientID ||
+            !self.clientSecret ||
+            !self.refreshToken)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:BoxOAuth2SessionDidReceiveAuthenticationErrorNotification object:nil];
+            return;
+        }
+        
         NSDictionary *POSTParams = @{
-        BoxOAuth2TokenRequestGrantTypeKey : BoxOAuth2TokenRequestGrantTypeRefreshToken,
-        BoxOAuth2TokenRequestRefreshTokenKey : (!self.refreshToken) ?   @"invalidToken" : self.refreshToken,
-        BoxOAuth2TokenRequestClientIDKey : self.clientID,
-        BoxOAuth2TokenRequestClientSecretKey : self.clientSecret,
+            BoxOAuth2TokenRequestGrantTypeKey : BoxOAuth2TokenRequestGrantTypeRefreshToken,
+            BoxOAuth2TokenRequestRefreshTokenKey : (!self.refreshToken) ?   @"invalidToken" : self.refreshToken,
+            BoxOAuth2TokenRequestClientIDKey : self.clientID,
+            BoxOAuth2TokenRequestClientSecretKey : self.clientSecret
         };
         
         BoxAPIOAuth2ToJSONOperation *operation = [[BoxAPIOAuth2ToJSONOperation alloc] initWithURL:self.grantTokensURL
