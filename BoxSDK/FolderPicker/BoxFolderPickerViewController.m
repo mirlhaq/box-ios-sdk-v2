@@ -334,8 +334,8 @@
     
     NSMutableDictionary *fieldsDictionnary = [NSMutableDictionary dictionary];
     [fieldsDictionnary setObject:@"size,name,modified_at" forKey:@"fields"];
-    [fieldsDictionnary setObject:[NSNumber numberWithInt:self.currentPage * self.numberOfItemsPerPage] forKey:@"limit"];
-    [fieldsDictionnary setObject:[NSNumber numberWithInt: (self.currentPage - 1) * self.numberOfItemsPerPage ] forKey:@"offset"];
+    [fieldsDictionnary setObject:[NSNumber numberWithUnsignedInteger:self.currentPage * self.numberOfItemsPerPage] forKey:@"limit"];
+    [fieldsDictionnary setObject:[NSNumber numberWithUnsignedInteger: (self.currentPage - 1) * self.numberOfItemsPerPage ] forKey:@"offset"];
     BoxFoldersRequestBuilder *request = [[BoxFoldersRequestBuilder alloc] initWithQueryStringParameters:fieldsDictionnary];
     
     [self.sdk.foldersManager folderItemsWithID:self.folderID requestBuilder:request success:listSuccess failure:infoFailure];
